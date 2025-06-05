@@ -16,7 +16,7 @@ jobs:
     - name: Setup SSH key
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.GCP_SSH_KEY }}" > ~/.ssh/id_rsa
+        echo "${{ secrets.GCP_SSH_KEY_B64 }}" | base64 -d > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
 
     - name: Add GCP VM to known_hosts
@@ -24,13 +24,5 @@ jobs:
 
     - name: SSH to GCP and run command
       run: |
-        ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} \
+        ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} \
         "echo '✅ Connected to GCP!' && hostname && uptime"
-
-    - name: Setup SSH key
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.GCP_SSH_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-
-
