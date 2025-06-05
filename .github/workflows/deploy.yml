@@ -1,4 +1,4 @@
-name: Deploy to GCP
+name: Deploy to GCP via gcloud
 
 on:
   push:
@@ -10,19 +10,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Setup SSH key
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.GCP_SSH_KEY_B64 }}" | base64 -d > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY_JSON }}
+          export_default_credentials: true
 
-    - name: Add GCP VM to known_hosts
-      run: ssh-keyscan -H ${{ secrets.GCP_HOST }} >> ~/.ssh/known_hosts
-
-    - name: SSH to GCP and run command
-      run: |
-        ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} \
-        "echo '✅ Connected to GCP!' && hostname && uptime"
+      - name: Run command on GCP VM
+        run: |
+          gcloud compute ssh ${{ secrets.GCP_USER }}@${{ secrets.GCP_INSTANCE_NAME }} --zone=${{ secrets.GCP_ZONE }} --command="echo '✅ Connected!' && hostname && uptime"
