@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v3
 
     - name: Setup SSH key
@@ -22,6 +22,5 @@ jobs:
     - name: Add GCP host to known_hosts
       run: ssh-keyscan -H ${{ secrets.GCP_HOST }} >> ~/.ssh/known_hosts
 
-    - name: Connect to GCP VM and run command
-      run: |
-        ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "echo '✅ Connected to GCP!' && hostname && uptime"
+    - name: SSH to GCP VM
+      run: ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} "echo '✅ Connected to GCP!' && hostname && uptime"
