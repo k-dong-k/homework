@@ -3,7 +3,7 @@ name: Deploy to Cloud
 on:
   push:
     branches:
-      - main
+      - main  # main 브랜치에 푸시되면 실행
 
 jobs:
   deploy:
