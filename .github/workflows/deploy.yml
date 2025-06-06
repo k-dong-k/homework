@@ -42,5 +42,5 @@ jobs:
 
       - name: Deploy to GKE
         run: |
-          kubectl set image deployment/my-deployment my-container=gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-app:latest
+          kubectl set image deployment/my-deployment my-container=gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-repo:latest
           kubectl rollout status deployment/my-deployment
