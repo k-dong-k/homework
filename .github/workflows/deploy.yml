@@ -27,5 +27,5 @@ jobs:
           pkill -f streamlit || true
           cd ~/streamlit-app
           pip install -r requirements.txt
-          nohup streamlit run your_app.py --server.port 8501 --server.address 0.0.0.0 &
+          nohup streamlit run server2.py --server.port 8501 --server.address 0.0.0.0 &
         EOF
