@@ -3,7 +3,7 @@ name: Deploy Streamlit to AWS EC2
 on:
   push:
     branches:
-      - main  # main 브랜치에 push될 때만 작동
+      - main  # main 브랜치에 push될 때만 실행
 
 jobs:
   deploy:
@@ -26,6 +26,12 @@ jobs:
         ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
           pkill -f streamlit || true
           cd ~/streamlit-app
+          # 가상환경이 없으면 생성
+          if [ ! -d "venv" ]; then
+            python3 -m venv venv
+          fi
+          source venv/bin/activate
+          pip install --upgrade pip
           pip install -r requirements.txt
           nohup streamlit run server2.py --server.port 8501 --server.address 0.0.0.0 &
         EOF
